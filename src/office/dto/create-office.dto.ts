@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsObject, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Address } from '../entities/address.entity';
 export class CreateOfficeDto {
@@ -7,6 +7,7 @@ export class CreateOfficeDto {
   name: string;
 
   @ApiProperty()
+  @IsObject()
   address: Address;
 
   @ApiProperty()
