@@ -30,10 +30,10 @@ export class User {
   languages: string[];
 
   @Prop()
-  treatments: string; // TODO: hacer la relacion para los tratamientos ofrecidos
+  treatments: string;
 
   @Prop()
-  comments_valorations: string; // TODO: hacer la relacion para comentarios y valoraciones
+  comments_valorations: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

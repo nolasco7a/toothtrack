@@ -15,35 +15,43 @@ export class AuthService {
   ) {}
 
   async register(RegisterAuthDto: RegisterAuthDto) {
-    const { email, password } = RegisterAuthDto;
+    try {
+      const { email, password } = RegisterAuthDto;
 
-    const verificationEmail = await this.verificationEmail(email);
-    if (verificationEmail) {
-      const planeToHash = await hash(password, 10);
-      RegisterAuthDto = { ...RegisterAuthDto, password: planeToHash };
+      const verificationEmail = await this.verificationEmail(email);
+      if (verificationEmail) {
+        const planeToHash = await hash(password, 10);
+        RegisterAuthDto = { ...RegisterAuthDto, password: planeToHash };
 
-      return this.userModel.create(RegisterAuthDto);
+        return this.userModel.create(RegisterAuthDto);
+      }
+    } catch (error) {
+      return error;
     }
   }
 
   async login(LoginAuthDto: LoginAuthDto) {
-    const { email, password } = LoginAuthDto;
+    try {
+      const { email, password } = LoginAuthDto;
 
-    const findUser = await this.userModel.findOne({ email: email });
-    if (!findUser) throw new HttpException('User not found', 404);
+      const findUser = await this.userModel.findOne({ email: email });
+      if (!findUser) throw new HttpException('User not found', 404);
 
-    const checkPassword = await compare(password, findUser.password);
-    if (!checkPassword)
-      throw new HttpException('Email or Password incorrect', 403);
+      const checkPassword = await compare(password, findUser.password);
+      if (!checkPassword)
+        throw new HttpException('Email or Password incorrect', 403);
 
-    const payload = { id: findUser._id, name: findUser.name };
-    const token = await this.jwtService.sign(payload);
+      const payload = { id: findUser._id, name: findUser.name };
+      const token = await this.jwtService.sign(payload);
 
-    const data = {
-      user: findUser,
-      token,
-    };
-    return data;
+      const data = {
+        user: findUser,
+        token,
+      };
+      return data;
+    } catch (error) {
+      return error;
+    }
   }
 
   async verificationEmail(email: string) {

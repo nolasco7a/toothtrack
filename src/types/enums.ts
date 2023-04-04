@@ -12,3 +12,10 @@ export enum status_comment {
   Inactive = 'Inactive',
   Deleted = 'Deleted',
 }
+
+export enum status_user {
+  Active = 'Active',
+  Pending = 'Pending',
+  Inactive = 'Inactive',
+  Deleted = 'Deleted',
+}

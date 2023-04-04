@@ -20,6 +20,19 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 export class CommentController {
   constructor(private readonly commentService: CommentService) {}
 
+  @Post()
+  requestComment(
+    @Body() createCommentDto: CreateCommentDto,
+    patientId: string,
+  ) {
+    return this.commentService.requestComment(createCommentDto, patientId);
+  }
+
+  @Post()
+  updateCommentByPatient(@Body() commentId: string, patientId: string) {
+    //TODO: update comment by patient
+  }
+
   @UseGuards(JwtAuthGuard)
   @Post()
   create(@Body() createCommentDto: CreateCommentDto) {

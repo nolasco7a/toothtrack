@@ -5,6 +5,7 @@ import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
 import { Appointment, AppointmentDocument } from './schema/appointments.schema';
 import { Patient, PatientDocument } from 'src/patient/schema/patient.schema';
+import { PatientService } from 'src/patient/patient.service';
 import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
@@ -13,22 +14,10 @@ export class AppointmentService {
     @InjectModel(Appointment.name)
     private appointmentModel: Model<AppointmentDocument>,
     @InjectModel(Patient.name) private patientModel: Model<PatientDocument>,
+    private readonly patientService: PatientService,
   ) {}
 
-  async validatePatient(
-    email: string,
-    phone_number: number,
-  ): Promise<Patient | undefined> {
-    const patient = await this.patientModel.findOne({
-      $or: [{ email }, { phone_number }],
-    });
-    if (patient) {
-      return patient;
-    }
-    return null;
-  }
-
-  async createPatient(data: object): Promise<Patient | undefined> {
+  async createPatient(data: object): Promise<Patient | any> {
     const createPatient = await new this.patientModel({
       email: data['email'] ? data['email'] : null,
       name: data['name'],
@@ -42,7 +31,10 @@ export class AppointmentService {
   ): Promise<Appointment> {
     try {
       const { email, phone_number } = createAppointmentByWebsiteDto;
-      const patient = await this.validatePatient(email, phone_number);
+      const patient = await this.patientService.validatePatient(
+        email,
+        phone_number,
+      );
       if (patient) {
         const createAppointment = await new this.appointmentModel(
           createAppointmentByWebsiteDto,
@@ -73,7 +65,10 @@ export class AppointmentService {
   ): Promise<Appointment> {
     try {
       const { email, phone_number } = createAppointmentDto;
-      const patient = await this.validatePatient(email, phone_number);
+      const patient = await this.patientService.validatePatient(
+        email,
+        phone_number,
+      );
       if (patient) {
         const createAppointment = await new this.appointmentModel(
           createAppointmentDto,
@@ -118,6 +113,30 @@ export class AppointmentService {
         .populate({ path: 'dentist', select: '-password' })
         .exec();
       return appointment;
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async findByPatient(id: string) {
+    try {
+      const appointmentsByPatient = await this.appointmentModel
+        .find({ patient: id })
+        .exec();
+
+      return appointmentsByPatient;
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async findByDentist(id: string) {
+    try {
+      const appointmentsByDentist = await this.appointmentModel
+        .find({ dentist: id })
+        .exec();
+
+      return appointmentsByDentist;
     } catch (error) {
       return error;
     }

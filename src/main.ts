@@ -13,6 +13,9 @@ async function bootstrap() {
     .addTag('appointment')
     .addTag('comment')
     .addTag('office')
+    .addTag('patient')
+    .addTag('role')
+    .addTag('user')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('documentation', app, document);
