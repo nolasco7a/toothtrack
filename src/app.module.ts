@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import configuration from './config/configuration';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -12,9 +14,8 @@ import { RoleModule } from './role/role.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(
-      ,
-    ),
+    ConfigModule.forRoot({ load: [configuration] }),
+    MongooseModule.forRoot(process.env.MONGO_URI),
     AppointmentModule,
     UserModule,
     AuthModule,
