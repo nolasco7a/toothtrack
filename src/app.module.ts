@@ -13,7 +13,7 @@ import { RoleModule } from './role/role.module';
 @Module({
   imports: [
     MongooseModule.forRoot(
-      'mongodb+srv://nolasco7a:fMnvnAPYydjO8529@cluster0.e6zy1.mongodb.net/?retryWrites=true&w=majority',
+      ,
     ),
     AppointmentModule,
     UserModule,
