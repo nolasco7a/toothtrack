@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UseGuards } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { Model } from 'mongoose';
@@ -12,31 +12,33 @@ export class UserService {
     private userModel: Model<UserDocument>,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
-    const createUser = await new this.userModel(createUserDto);
-    return createUser.save();
-  }
+  // delegated function to register auth module
+  // async create(createUserDto: CreateUserDto): Promise<User> {
+  //   const createUser = await new this.userModel(createUserDto);
+  //   return createUser.save();
+  // }
 
   async findAll() {
-    const users = await this.userModel.find({});
+    const users = await this.userModel.find({}).select('-password');
     return users;
   }
 
-  async findOne(id: number) {
-    const user = await this.userModel.findById({ _id: id });
+  async findOne(id: string) {
+    const user = await this.userModel.findById({ _id: id }).select('-password');
     return user;
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
-    const updateUser = await this.userModel.findByIdAndUpdate({
-      _id: id,
+  async update(id: string, updateUserDto: any) {
+    const updateUser = await this.userModel.findByIdAndUpdate(
+      id,
       updateUserDto,
-    });
+      { new: true },
+    );
 
-    return updateUserDto;
+    return updateUser;
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
     const removeUser = await this.userModel.deleteOne({ _id: id });
     return removeUser;
   }

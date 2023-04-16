@@ -19,6 +19,14 @@ export class CommentService {
     @InjectModel(Comment.name) private commentModel: Model<CommentDocument>,
   ) {}
 
+  async requestComment(createCommentDto: CreateCommentDto, patientId: string) {
+    try {
+      //TODO: create comment with userid and send this comment id to user by text message
+    } catch (error) {
+      return error;
+    }
+  }
+
   async create(createCommentDto: CreateCommentDto) {
     try {
       const createComment = await new this.commentModel(createCommentDto);
@@ -34,9 +42,9 @@ export class CommentService {
     try {
       const comments = await this.commentModel
         .find({
-          $or: [{ status: 'active' }, { status: 'pending' }],
+          $or: [{ status: 'Active' }, { status: 'Pending' }],
         })
-        .populate('patient')
+        .populate('author')
         .exec();
       return comments;
     } catch (error) {
@@ -48,7 +56,7 @@ export class CommentService {
     try {
       const comment = await this.commentModel
         .findById(id)
-        .populate('patient')
+        .populate('author')
         .exec();
       return comment;
     } catch (error) {
@@ -71,7 +79,7 @@ export class CommentService {
 
   remove(id: string) {
     try {
-      const removeComment = this.commentModel.findByIdAndDelete(id);
+      const removeComment = this.commentModel.deleteOne({ _id: id });
       return removeComment;
     } catch (error) {
       return error;

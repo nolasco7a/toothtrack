@@ -1,33 +1,16 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
+import { Address } from '../entities/address.entity';
 
 export type OfficeDocument = HydratedDocument<Office>;
 
 @Schema()
 export class Office {
-  @Prop({ required: true })
+  @Prop()
   name: string;
 
-  @Prop({ required: true })
-  address: string;
-
-  @Prop({ required: true })
-  phone_number: number;
-
-  @Prop({ required: true })
-  email: string;
-
-  @Prop({ required: true })
-  created_at: Date;
-
   @Prop()
-  updated_at: Date;
-
-  @Prop()
-  created_by: string;
-
-  @Prop()
-  updated_by: string;
+  address: Address;
 }
 
 export const OfficeSchema = SchemaFactory.createForClass(Office);

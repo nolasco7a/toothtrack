@@ -10,18 +10,9 @@ export class CreateUserDto {
   @IsString()
   password: string;
 
-  @IsString()
-  image: string;
-
-  @IsNumber()
   phone_number: number;
-
-  @IsString()
+  image: string;
   license_number: string;
-
-  @IsString()
   languages: string[];
-
-  @IsString()
   treatments: string[];
 }

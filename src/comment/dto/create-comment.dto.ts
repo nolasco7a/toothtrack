@@ -8,6 +8,7 @@ export class CreateCommentDto {
   author: string; // referencia to author
 
   @ApiProperty()
+  @IsString()
   content: string;
 
   @ApiProperty()

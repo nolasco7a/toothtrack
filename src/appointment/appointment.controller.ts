@@ -53,6 +53,18 @@ export class AppointmentController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Get('patient/:id')
+  findByPatient(@Param('id') id: string) {
+    return this.appointmentService.findByPatient(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('dentist/:id')
+  findByDentist(@Param('id') id: string) {
+    return this.appointmentService.findByDentist(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   update(
     @Param('id') id: string,

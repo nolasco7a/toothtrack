@@ -1,26 +1,41 @@
 import { Injectable } from '@nestjs/common';
 import { CreateOfficeDto } from './dto/create-office.dto';
 import { UpdateOfficeDto } from './dto/update-office.dto';
+import { Office, OfficeDocument } from './schema/office.schema';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class OfficeService {
-  create(createOfficeDto: CreateOfficeDto) {
-    return 'This action adds a new office';
+  constructor(
+    @InjectModel(Office.name) private officeModel: Model<OfficeDocument>,
+  ) {}
+
+  async create(createOfficeDto: CreateOfficeDto): Promise<Office> {
+    const createOffice = await new this.officeModel(createOfficeDto);
+    return createOffice.save();
   }
 
-  findAll() {
-    return `This action returns all office`;
+  async findAll(): Promise<Office[]> {
+    const offices = await this.officeModel.find();
+    return offices;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} office`;
+  async findOne(id: number): Promise<Office> {
+    const office = await this.officeModel.findById(id);
+    return office;
   }
 
-  update(id: number, updateOfficeDto: UpdateOfficeDto) {
-    return `This action updates a #${id} office`;
+  async update(id: number, updateOfficeDto: UpdateOfficeDto): Promise<Office> {
+    const office = await this.officeModel.findByIdAndUpdate(
+      id,
+      updateOfficeDto,
+    );
+    return office;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} office`;
+  async remove(id: number) {
+    const office = await this.officeModel.findByIdAndDelete(id);
+    return office;
   }
 }
